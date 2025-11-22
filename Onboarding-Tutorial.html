@@ -1,0 +1,484 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Pantalla 4: Onboarding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 50%, #4a2d85 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Skip Button */
+        .skip-btn {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+            min-height: 36px;
+        }
+
+        .skip-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Slides Container */
+        .slides-container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            min-height: 100vh;
+        }
+
+        .slide {
+            min-width: 100%;
+            max-width: 430px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--space-2xl) var(--space-md);
+            text-align: center;
+        }
+
+        /* Onboarding Icon */
+        .onboarding-icon {
+            font-size: clamp(80px, 20vw, 120px);
+            margin-bottom: var(--space-xl);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Content */
+        .onboarding-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            margin: 0 auto;
+            max-width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .onboarding-title {
+            font-size: clamp(22px, 6vw, 28px);
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            color: white;
+            line-height: 1.3;
+        }
+
+        .onboarding-text {
+            font-size: clamp(14px, 4vw, 16px);
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: var(--space-lg) 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-md);
+            border-radius: var(--radius-sm);
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            color: white;
+            font-size: clamp(13px, 3.5vw, 15px);
+            line-height: 1.5;
+        }
+
+        /* Dots Navigation */
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin: var(--space-xl) 0;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-xl);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            min-height: 44px;
+            transition: all 0.3s;
+            font-family: inherit;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-full-width {
+            width: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 375px) {
+            .slide {
+                padding: var(--space-xl) var(--space-md);
+            }
+
+            .onboarding-content {
+                padding: var(--space-lg);
+            }
+            
+            .btn {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .onboarding-icon {
+                margin-bottom: var(--space-lg);
+            }
+
+            .feature-item {
+                padding: var(--space-sm);
+                gap: var(--space-sm);
+            }
+        }
+
+        /* Hide elements on specific slides */
+        .slide:last-child .skip-btn {
+            display: none;
+        }
+
+        /* Animation for slide entrance */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide.active .onboarding-content {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Skip Button -->
+        <button class="skip-btn" onclick="goToSlide(2)">Saltar</button>
+
+        <!-- Slides -->
+        <div class="slides-container" id="slidesContainer">
+            
+            <!-- Slide 1: Welcome -->
+            <div class="slide active">
+                <div class="onboarding-icon">📅</div>
+                <div class="onboarding-content">
+                    <h2 class="onboarding-title">Agenda en 3 Pasos</h2>
+                    <p class="onboarding-text">
+                        Selecciona tu servicio, elige fecha y hora, y confirma. ¡Así de fácil!
+                    </p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">1️⃣</div>
+                            <div class="feature-text">Elige tu servicio favorito</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">2️⃣</div>
+                            <div class="feature-text">Selecciona fecha y estilista</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">3️⃣</div>
+                            <div class="feature-text">Confirma y listo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Real-time Availability -->
+            <div class="slide">
+                <div class="onboarding-icon">⚡</div>
+                <div class="onboarding-content">
+                    <h2 class="onboarding-title">Disponibilidad en Tiempo Real</h2>
+                    <p class="onboarding-text">
+                        Ve los horarios disponibles al instante. Sin llamadas, sin esperas, sin frustraciones.
+                    </p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">🕐</div>
+                            <div class="feature-text">Horarios actualizados al segundo</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📱</div>
+                            <div class="feature-text">Reserva 24/7 desde tu móvil</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">✅</div>
+                            <div class="feature-text">Confirmación inmediata</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Get Started -->
+            <div class="slide">
+                <div class="onboarding-icon">🎉</div>
+                <div class="onboarding-content">
+                    <h2 class="onboarding-title">¡Todo Listo!</h2>
+                    <p class="onboarding-text">
+                        Comienza a disfrutar de una experiencia de belleza sin complicaciones. Tu tiempo es valioso.
+                    </p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">💰</div>
+                            <div class="feature-text">Precios transparentes</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔔</div>
+                            <div class="feature-text">Recordatorios automáticos</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">⭐</div>
+                            <div class="feature-text">Profesionales calificados</div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="window.location.href='Dashboard-Cliente.html'"  class="btn btn-primary btn-full-width" onclick="finishOnboarding()">
+                        Comenzar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Dots Navigation -->
+        <div class="dots-container">
+            <div class="dot active" onclick="goToSlide(0)"></div>
+            <div class="dot" onclick="goToSlide(1)"></div>
+            <div class="dot" onclick="goToSlide(2)"></div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div style="padding: 0 var(--space-md) var(--space-xl);">
+            <div class="btn-container" id="navButtons">
+                <button class="btn btn-outline" onclick="previousSlide()" id="prevBtn" style="display: none;">
+                    Anterior
+                </button>
+                <button class="btn btn-primary" onclick="nextSlide()" id="nextBtn">
+                    Siguiente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const slidesContainer = document.getElementById('slidesContainer');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slides = document.querySelectorAll('.slide');
+
+        function updateSlide() {
+            // Update slides position
+            const slideWidth = slides[0].offsetWidth;
+            slidesContainer.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+            
+            // Update buttons visibility
+            prevBtn.style.display = currentSlide === 0 ? 'none' : 'block';
+            
+            if (currentSlide === totalSlides - 1) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'block';
+            }
+
+            // Update active slide class
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlide();
+        }
+
+        function finishOnboarding() {
+            alert('¡Bienvenido a AppSalón! Redirigiendo al dashboard...');
+            // Here would navigate to dashboard
+        }
+
+        // Touch events for swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        slidesContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        slidesContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                nextSlide(); // Swipe left
+            }
+            if (touchEndX > touchStartX + 50) {
+                previousSlide(); // Swipe right
+            }
+        }
+
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+</html>

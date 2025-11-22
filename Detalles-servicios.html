@@ -1,0 +1,900 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Detalle de Servicio</title>
+    <style>
+        /* Tus estilos existentes se mantienen igual */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md);
+        
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-title {
+            font-size: clamp(16px, 4.5vw, 18px);
+            font-weight: 600;
+            color: white;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Hero Image */
+        .service-hero {
+            height: 250px;
+            background: linear-gradient(135deg, rgba(107, 70, 193, 0.3) 0%, rgba(90, 56, 163, 0.3) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 96px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* Content */
+        .content {
+            padding: var(--space-md);
+        }
+
+        /* Service Header Card */
+        .service-header-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(107, 70, 193, 0.1);
+            color: var(--primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .service-title {
+            font-size: clamp(22px, 6vw, 24px);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+            line-height: 1.3;
+        }
+
+        .service-rating-section {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--warning);
+        }
+
+        .rating-stars {
+            font-size: 18px;
+        }
+
+        .rating-count {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .service-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            padding: var(--space-md) 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-icon {
+            font-size: 24px;
+            margin-bottom: var(--space-xs);
+        }
+
+        .meta-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .meta-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .price-section {
+            margin-top: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .price-value {
+            font-size: clamp(24px, 6vw, 28px);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: clamp(16px, 4.5vw, 18px);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .card-title-icon {
+            font-size: 20px;
+        }
+
+        .description-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Benefits List */
+        .benefits-list {
+            list-style: none;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: start;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .benefit-icon {
+            color: var(--success);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Portfolio Gallery */
+        .portfolio-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .portfolio-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, #5a38a3 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* Stylists Section */
+        .stylist-card {
+            display: flex;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--bg-main);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stylist-card:hover {
+            background: var(--border);
+        }
+
+        .stylist-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, #5a38a3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .stylist-info {
+            flex: 1;
+        }
+
+        .stylist-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .stylist-specialty {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stylist-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--warning);
+        }
+
+        /* Fixed Bottom Bar */
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md);
+            box-shadow: 0px -4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .bottom-bar-content {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .price-summary {
+            flex: 1;
+        }
+
+        .price-summary-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .price-summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            min-height: 44px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #5a38a3;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 12px rgba(107, 70, 193, 0.3);
+        }
+
+        .btn-icon {
+            background: rgba(107, 70, 193, 0.1);
+            color: var(--primary);
+            padding: 12px;
+            min-width: 44px;
+        }
+
+        .btn-icon:hover {
+            background: rgba(107, 70, 193, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 375px) {
+            .service-hero {
+                height: 200px;
+                font-size: 72px;
+            }
+
+            .service-header-card,
+            .info-card {
+                padding: var(--space-md);
+            }
+
+            .service-meta-grid {
+                gap: var(--space-sm);
+            }
+
+            .meta-icon {
+                font-size: 20px;
+            }
+
+            .portfolio-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: var(--space-sm);
+            }
+
+            .service-meta-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='Catalogo-servicios.html'">←</button>
+                <div class="header-title">Detalle del Servicio</div>
+             
+            </div>
+        </div>
+
+        <!-- Hero Image -->
+        <div class="service-hero" id="service-hero">
+            <!-- Icono se cargará dinámicamente -->
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Service Header Card -->
+            <div class="service-header-card">
+                <div class="category-badge" id="service-category">CORTE</div>
+                <h1 class="service-title" id="service-name">Corte de Cabello Profesional</h1>
+                
+                <div class="service-rating-section">
+                    <div class="rating-display">
+                        <span class="rating-stars" id="service-rating-stars">⭐⭐⭐⭐⭐</span>
+                        <span id="service-rating">4.8</span>
+                    </div>
+                    <span class="rating-count" id="service-reviews">(120 reseñas)</span>
+                </div>
+
+                <div class="service-meta-grid">
+                    <div class="meta-item">
+                        <div class="meta-icon">⏱️</div>
+                        <div class="meta-label">Duración</div>
+                        <div class="meta-value" id="service-duration">30 min</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-icon">👥</div>
+                        <div class="meta-label">Reservas</div>
+                        <div class="meta-value" id="service-bookings">1,245</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-icon">📍</div>
+                        <div class="meta-label">Ubicación</div>
+                        <div class="meta-value" id="service-location">Centro</div>
+                    </div>
+                </div>
+
+                <div class="price-section">
+                    <div class="price-label">Precio desde</div>
+                    <div class="price-value" id="service-price">$35.000</div>
+                </div>
+            </div>
+
+            <!-- Description Card -->
+            <div class="info-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">📝</span>
+                    Descripción
+                </h2>
+                <p class="description-text" id="service-description">
+                    Cargando descripción...
+                </p>
+                <p class="description-text" id="service-additional-description">
+                    <!-- Descripción adicional se cargará dinámicamente -->
+                </p>
+            </div>
+
+            <!-- Benefits Card -->
+            <div class="info-card" id="benefits-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">✅</span>
+                    Beneficios Incluidos
+                </h2>
+                <ul class="benefits-list" id="benefits-list">
+                    <!-- Beneficios se cargarán dinámicamente -->
+                </ul>
+            </div>
+
+            <!-- Portfolio Card -->
+            <div class="info-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">📸</span>
+                    Galería de Trabajos
+                </h2>
+                <div class="portfolio-gallery">
+                    <div class="portfolio-item">✂️</div>
+                    <div class="portfolio-item">💇‍♀️</div>
+                    <div class="portfolio-item">💇‍♂️</div>
+                    <div class="portfolio-item">✨</div>
+                    <div class="portfolio-item">💁‍♀️</div>
+                    <div class="portfolio-item">👨‍🦰</div>
+                </div>
+            </div>
+
+            <!-- Stylists Card -->
+            <div class="info-card" id="stylists-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">👥</span>
+                    Estilistas Disponibles
+                </h2>
+                <!-- Estilistas se cargarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Fixed Bottom Bar -->
+        <div class="fixed-bottom-bar">
+            <div class="bottom-bar-content">
+                <div class="price-summary">
+                    <div class="price-summary-label">Precio</div>
+                    <div class="price-summary-value" id="bottom-price">$35.000</div>
+                </div>
+                <button class="btn btn-icon" id="save-btn">🔖</button>
+                <button onclick="reserveService()" class="btn btn-primary" id="book-btn">Reservar Ahora</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de servicios (debe coincidir con la del catálogo)
+        const servicesData = {
+            1: {
+                id: 1,
+                name: "Corte de Cabello Profesional",
+                category: "CORTE",
+                icon: "✂️",
+                duration: "30 min",
+                rating: 4.8,
+                reviews: 120,
+                bookings: 1245,
+                location: "Centro",
+                price: 35000,
+                description: "Corte de cabello profesional adaptado a tu estilo y tipo de rostro. Incluye consulta personalizada, lavado con productos premium y secado con técnica profesional.",
+                additionalDescription: "Nuestros estilistas están capacitados en las últimas tendencias y técnicas de corte para garantizar un resultado excepcional.",
+                benefits: [
+                    "Consulta personalizada con estilista certificado",
+                    "Técnicas adaptadas a tu tipo de cabello",
+                    "Productos de alta calidad",
+                    "Asesoramiento de estilo post-corte"
+                ],
+                stylists: [
+                    { name: "Ana María García", specialty: "Especialista en cortes modernos", rating: 4.9, reviews: 89 },
+                    { name: "Carlos Mendoza", specialty: "Experto en estilos clásicos", rating: 4.8, reviews: 76 },
+                    { name: "Laura Rodríguez", specialty: "Tendencias y creatividad", rating: 5.0, reviews: 102 }
+                ]
+            },
+            2: {
+                id: 2,
+                name: "Tinte Completo",
+                category: "COLOR",
+                icon: "🎨",
+                duration: "90 min",
+                rating: 4.9,
+                reviews: 89,
+                bookings: 856,
+                location: "Centro",
+                price: 120000,
+                description: "Aplicación profesional de tinte con productos de alta calidad que respetan tu cabello. Incluye diagnóstico capilar, selección de tono personalizada y tratamiento post-coloración.",
+                additionalDescription: "Utilizamos tintes libres de amoníaco y con ingredientes nutritivos para mantener tu cabello saludable y brillante.",
+                benefits: [
+                    "Diagnóstico capilar personalizado",
+                    "Tintes libres de amoníaco",
+                    "Tratamiento nutritivo post-coloración",
+                    "Asesoramiento de mantenimiento"
+                ],
+                stylists: [
+                    { name: "María Fernanda López", specialty: "Especialista en coloración", rating: 4.9, reviews: 67 },
+                    { name: "Ricardo Silva", specialty: "Técnicas de color avanzadas", rating: 4.8, reviews: 54 }
+                ]
+            },
+            3: {
+                id: 3,
+                name: "Tratamiento de Keratina",
+                category: "TRATAMIENTO",
+                icon: "✨",
+                duration: "120 min",
+                rating: 4.7,
+                reviews: 56,
+                bookings: 423,
+                location: "Centro",
+                price: 180000,
+                description: "Tratamiento profesional de keratina que elimina el frizz, alisa el cabello y restaura su salud. Efecto duradero de hasta 3 meses.",
+                additionalDescription: "Ideal para cabellos rizados, ondulados o con mucho frizz. Resultados inmediatos y progresivos que mejoran con el tiempo.",
+                benefits: [
+                    "Eliminación del frizz hasta en 85%",
+                    "Cabello más manejable y brillante",
+                    "Efecto duradero hasta 3 meses",
+                    "Reparación de daños capilares"
+                ],
+                stylists: [
+                    { name: "Patricia Gómez", specialty: "Tratamientos capilares", rating: 4.9, reviews: 89 },
+                    { name: "Andrea Ramírez", specialty: "Terapias reconstructivas", rating: 4.7, reviews: 45 }
+                ]
+            },
+            4: {
+                id: 4,
+                name: "Manicure Completo",
+                category: "UÑAS",
+                icon: "💅",
+                duration: "45 min",
+                rating: 4.8,
+                reviews: 102,
+                bookings: 1567,
+                location: "Centro",
+                price: 40000,
+                description: "Servicio completo de manicure que incluye limado, cutículas, hidratación y esmaltado profesional. Opción de esmalte regular o semipermanente.",
+                additionalDescription: "Utilizamos productos de primera calidad y técnicas que protegen la salud de tus uñas y cutículas.",
+                benefits: [
+                    "Limpieza y cuidado de cutículas",
+                    "Hidratación profunda con productos especializados",
+                    "Esmaltado profesional sin dañar la uña",
+                    "Duración extendida con esmalte semipermanente"
+                ],
+                stylists: [
+                    { name: "Sofia Martínez", specialty: "Manicure artístico", rating: 4.9, reviews: 112 },
+                    { name: "Camila Rodríguez", specialty: "Uñas naturales y cuidado", rating: 4.8, reviews: 87 }
+                ]
+            },
+            5: {
+                id: 5,
+                name: "Corte + Peinado",
+                category: "CORTE",
+                icon: "💇‍♀️",
+                duration: "60 min",
+                rating: 4.9,
+                reviews: 145,
+                bookings: 987,
+                location: "Centro",
+                price: 55000,
+                description: "Combinación perfecta: corte profesional adaptado a tu estilo seguido de un peinado completo para lucir tu nuevo look inmediatamente.",
+                additionalDescription: "Ideal para eventos especiales o simplemente para consentirte con un cambio de look completo.",
+                benefits: [
+                    "Corte personalizado según tu rostro y estilo",
+                    "Lavado con productos premium",
+                    "Peinado profesional para cualquier ocasión",
+                    "Asesoramiento de mantenimiento en casa"
+                ],
+                stylists: [
+                    { name: "Ana María García", specialty: "Especialista en cortes modernos", rating: 4.9, reviews: 89 },
+                    { name: "Laura Rodríguez", specialty: "Tendencias y creatividad", rating: 5.0, reviews: 102 }
+                ]
+            },
+            6: {
+                id: 6,
+                name: "Masaje Capilar",
+                category: "SPA",
+                icon: "🧖‍♀️",
+                duration: "30 min",
+                rating: 5.0,
+                reviews: 78,
+                bookings: 654,
+                location: "Centro",
+                price: 25000,
+                description: "Relajante masaje capilar que estimula la circulación, promueve el crecimiento del cabello y reduce el estrés. Incluye aceites esenciales.",
+                additionalDescription: "Perfecto para liberar tensiones mientras cuidas la salud de tu cuero cabelludo y cabello.",
+                benefits: [
+                    "Estimulación de la circulación sanguínea",
+                    "Reducción del estrés y tensión",
+                    "Promoción del crecimiento capilar",
+                    "Hidratación profunda del cuero cabelludo"
+                ],
+                stylists: [
+                    { name: "Elena Torres", specialty: "Terapias relajantes", rating: 4.9, reviews: 67 },
+                    { name: "Daniela Castro", specialty: "Bienestar capilar", rating: 5.0, reviews: 54 }
+                ]
+            }
+        };
+
+        // Cargar datos del servicio al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceId = localStorage.getItem('selectedServiceId');
+            
+            if (serviceId && servicesData[serviceId]) {
+                loadServiceData(servicesData[serviceId]);
+            } else {
+                // Si no hay servicio seleccionado, redirigir al catálogo
+                window.location.href = 'Catalogo-servicios.html';
+            }
+        });
+
+        // Función para cargar los datos del servicio en la página
+        function loadServiceData(service) {
+            // Actualizar hero
+            document.getElementById('service-hero').textContent = service.icon;
+            
+            // Actualizar información básica
+            document.getElementById('service-category').textContent = service.category;
+            document.getElementById('service-name').textContent = service.name;
+            document.getElementById('service-rating').textContent = service.rating;
+            document.getElementById('service-reviews').textContent = `(${service.reviews} reseñas)`;
+            document.getElementById('service-duration').textContent = service.duration;
+            document.getElementById('service-bookings').textContent = service.bookings.toLocaleString();
+            document.getElementById('service-location').textContent = service.location;
+            
+            // Formatear precio
+            const formattedPrice = `$${service.price.toLocaleString()}`;
+            document.getElementById('service-price').textContent = formattedPrice;
+            document.getElementById('bottom-price').textContent = formattedPrice;
+            
+            // Actualizar descripción
+            document.getElementById('service-description').textContent = service.description;
+            document.getElementById('service-additional-description').textContent = service.additionalDescription;
+            
+            // Actualizar beneficios
+            const benefitsList = document.getElementById('benefits-list');
+            benefitsList.innerHTML = '';
+            service.benefits.forEach(benefit => {
+                const li = document.createElement('li');
+                li.className = 'benefit-item';
+                li.innerHTML = `
+                    <span class="benefit-icon">✓</span>
+                    <span>${benefit}</span>
+                `;
+                benefitsList.appendChild(li);
+            });
+            
+            // Actualizar estilistas
+            const stylistsContainer = document.getElementById('stylists-card');
+            // Limpiar estilistas existentes (excepto el título)
+            while (stylistsContainer.children.length > 1) {
+                stylistsContainer.removeChild(stylistsContainer.lastChild);
+            }
+            
+            service.stylists.forEach(stylist => {
+                const stylistCard = document.createElement('div');
+                stylistCard.className = 'stylist-card';
+                stylistCard.innerHTML = `
+                    <div class="stylist-avatar">${stylist.name.charAt(0)}</div>
+                    <div class="stylist-info">
+                        <div class="stylist-name">${stylist.name}</div>
+                        <div class="stylist-specialty">${stylist.specialty}</div>
+                        <div class="stylist-rating">
+                            <span>⭐</span>
+                            <span>${stylist.rating} (${stylist.reviews} reseñas)</span>
+                        </div>
+                    </div>
+                `;
+                stylistsContainer.appendChild(stylistCard);
+            });
+            
+            // Actualizar estrellas de calificación
+            const ratingStars = document.getElementById('service-rating-stars');
+            ratingStars.textContent = getStarRating(service.rating);
+        }
+
+        // Función para convertir calificación numérica a estrellas
+        function getStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            let stars = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '⭐';
+            }
+            
+            if (halfStar) {
+                stars += '⭐';
+            }
+            
+            return stars;
+        }
+
+        // FUNCIÓN PRINCIPAL MODIFICADA: Reservar servicio
+        function reserveService() {
+            const serviceId = localStorage.getItem('selectedServiceId');
+            
+            if (serviceId && servicesData[serviceId]) {
+                const service = servicesData[serviceId];
+                
+                // Guardar información del servicio seleccionado en localStorage
+                const serviceInfo = {
+                    id: service.id,
+                    service: service.name,
+                    category: service.category,
+                    price: `$${service.price.toLocaleString()}`,
+                    duration: service.duration,
+                    icon: service.icon,
+                    location: service.location,
+                    stylist: service.stylists[0].name // Tomamos el primer estilista por defecto
+                };
+                
+                localStorage.setItem('selectedService', JSON.stringify(serviceInfo));
+                
+                // Redirigir a selección de fecha y hora
+                window.location.href = 'Selección-Fecha-Hora.html';
+            } else {
+                alert('Error: No se pudo cargar la información del servicio. Por favor, intenta nuevamente.');
+            }
+        }
+
+        // Funcionalidad de favoritos
+        document.getElementById('save-btn').addEventListener('click', function() {
+            alert('Servicio guardado en favoritos');
+        });
+
+        // Portfolio gallery click
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+        portfolioItems.forEach(item => {
+            item.addEventListener('click', function() {
+                alert('Abriendo galería completa...');
+            });
+        });
+
+        // Stylist card click (se asigna después de cargar los estilistas)
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.stylist-card')) {
+                alert('Ver perfil completo del estilista...');
+            }
+        });
+    </script>
+</body>
+</html>

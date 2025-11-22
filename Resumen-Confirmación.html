@@ -1,0 +1,856 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Resumen y Confirmación</title>
+    <style>
+        /* Tus estilos existentes se mantienen igual */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-title {
+            font-size: clamp(16px, 4.5vw, 18px);
+            font-weight: 600;
+            color: white;
+        }
+
+        .step-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Content */
+        .content {
+            padding: var(--space-md);
+        }
+
+        /* Success Banner */
+        .success-banner {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-md);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: clamp(20px, 5.5vw, 24px);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .success-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Info Card */
+        .info-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: clamp(16px, 4.5vw, 18px);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .card-title-icon {
+            font-size: 20px;
+        }
+
+        /* Detail Row */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        /* Service Summary */
+        .service-summary-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-header {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .service-icon-large {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary) 0%, #5a38a3 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .service-category {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(107, 70, 193, 0.1);
+            color: var(--primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .service-details {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Stylist Card */
+        .stylist-info-card {
+            display: flex;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--bg-main);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .stylist-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, #5a38a3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .stylist-details {
+            flex: 1;
+        }
+
+        .stylist-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stylist-specialty {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stylist-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        /* Price Summary */
+        .price-summary-card {
+            background: linear-gradient(135deg, rgba(107, 70, 193, 0.1) 0%, rgba(90, 56, 163, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--primary);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) 0;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .price-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .price-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--space-md);
+            margin-top: var(--space-md);
+            border-top: 2px solid var(--primary);
+        }
+
+        .price-total-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .price-total-value {
+            font-size: clamp(24px, 6vw, 28px);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Important Notes */
+        .notes-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-item {
+            display: flex;
+            align-items: start;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .note-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .note-icon {
+            color: var(--primary);
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Actions Card */
+        .actions-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .action-btn {
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-xs);
+            font-family: inherit;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary);
+            background: rgba(107, 70, 193, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .action-btn-icon {
+            font-size: 24px;
+        }
+
+        .action-btn-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Fixed Bottom Bar */
+        .fixed-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md);
+            box-shadow: 0px -4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+        .bottom-bar-buttons {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            min-height: 52px;
+            transition: all 0.3s;
+            font-family: inherit;
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: rgba(107, 70, 193, 0.1);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(107, 70, 193, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a38a3;
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 20px rgba(107, 70, 193, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 72px;
+            margin-bottom: var(--space-md);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .modal-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .service-icon-large {
+                width: 56px;
+                height: 56px;
+                font-size: 28px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="history.back()">←</button>
+                <div class="header-title">Resumen y Confirmación</div>
+                <div class="step-indicator">Paso 2/2</div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Success Banner -->
+            <div class="success-banner">
+                <div class="success-icon">✓</div>
+                <h1 class="success-title">¡Casi listo!</h1>
+                <p class="success-message">Revisa los detalles de tu reserva antes de confirmar</p>
+            </div>
+
+            <!-- Service Summary Card -->
+            <div class="service-summary-card">
+                <div class="service-header">
+                    <div class="service-icon-large" id="summaryServiceIcon">✂️</div>
+                    <div class="service-info">
+                        <div class="service-category" id="summaryServiceCategory">CORTE</div>
+                        <div class="service-name" id="summaryServiceName">Corte de Cabello Profesional</div>
+                        <div class="service-details" id="summaryServiceDetails">30 minutos • Centro</div>
+                    </div>
+                </div>
+
+                <div class="stylist-info-card">
+                    <div class="stylist-avatar">👩</div>
+                    <div class="stylist-details">
+                        <div class="stylist-name" id="summaryStylistName">Ana María García</div>
+                        <div class="stylist-specialty">Especialista en cortes modernos</div>
+                        <div class="stylist-rating">
+                            <span>⭐</span>
+                            <span>4.9 (89 reseñas)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment Details -->
+            <div class="info-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">📋</span>
+                    Detalles de la Cita
+                </h2>
+                <div class="detail-row">
+                    <div class="detail-label">📅 Fecha</div>
+                    <div class="detail-value" id="summaryDate">-</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">🕐 Hora</div>
+                    <div class="detail-value" id="summaryTime">-</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">📍 Ubicación</div>
+                    <div class="detail-value" id="summaryLocation">Calle 10 #5-30, Centro</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">⏱️ Duración</div>
+                    <div class="detail-value" id="summaryDuration">30 minutos</div>
+                </div>
+            </div>
+
+            <!-- Price Summary -->
+            <div class="price-summary-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">💰</span>
+                    Resumen de Precio
+                </h2>
+                <div class="price-row">
+                    <div class="price-label">Servicio</div>
+                    <div class="price-value" id="summaryPrice">$35.000</div>
+                </div>
+                <div class="price-row">
+                    <div class="price-label">Descuento primera reserva</div>
+                    <div class="price-value" style="color: var(--success);">-$5.000</div>
+                </div>
+                <div class="price-total">
+                    <div class="price-total-label">Total a Pagar</div>
+                    <div class="price-total-value">$30.000</div>
+                </div>
+            </div>
+
+            <!-- Important Notes -->
+            <div class="notes-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">ℹ️</span>
+                    Información Importante
+                </h2>
+                <div class="note-item">
+                    <span class="note-icon">•</span>
+                    <span>Por favor, llega 5 minutos antes de tu cita para registro</span>
+                </div>
+                <div class="note-item">
+                    <span class="note-icon">•</span>
+                    <span>Puedes cancelar o reprogramar hasta 2 horas antes sin cargo</span>
+                </div>
+                <div class="note-item">
+                    <span class="note-icon">•</span>
+                    <span>Recibirás una notificación 1 hora antes de tu cita</span>
+                </div>
+                <div class="note-item">
+                    <span class="note-icon">•</span>
+                    <span>El pago se realiza directamente en el salón</span>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="actions-card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">⚡</span>
+                    Acciones Rápidas
+                </h2>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="addToCalendar()">
+                        <span class="action-btn-icon">📅</span>
+                        <span class="action-btn-text">Añadir al Calendario</span>
+                    </button>
+                    <button class="action-btn" onclick="shareReservation()">
+                        <span class="action-btn-icon">📤</span>
+                        <span class="action-btn-text">Compartir</span>
+                    </button>
+                    <button class="action-btn" onclick="getDirections()">
+                        <span class="action-btn-icon">🗺️</span>
+                        <span class="action-btn-text">Cómo Llegar</span>
+                    </button>
+                    <button class="action-btn" onclick="contactSalon()">
+                        <span class="action-btn-icon">📞</span>
+                        <span class="action-btn-text">Contactar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fixed Bottom Bar -->
+        <div class="fixed-bottom-bar">
+            <div class="bottom-bar-buttons">
+                <button class="btn btn-secondary" onclick="goBack()">
+                    Modificar
+                </button>
+                <button class="btn btn-primary" onclick="confirmReservation()">
+                    Confirmar Reserva
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2 class="modal-title">¡Reserva Confirmada!</h2>
+            <p class="modal-message">
+                Tu cita ha sido confirmada exitosamente. Recibirás un correo de confirmación con todos los detalles.
+            </p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='MisCitas.html'" style="width: 100%;">
+                    Ver Mis Citas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cargar datos de la cita
+        function loadAppointmentData() {
+            const appointmentData = JSON.parse(localStorage.getItem('appointmentData'));
+            if (appointmentData) {
+                const appointmentDate = new Date(appointmentData.date);
+                
+                // Actualizar información del servicio
+                document.getElementById('summaryServiceIcon').textContent = appointmentData.icon;
+                document.getElementById('summaryServiceCategory').textContent = appointmentData.category;
+                document.getElementById('summaryServiceName').textContent = appointmentData.service;
+                document.getElementById('summaryServiceDetails').textContent = `${appointmentData.duration} • Centro`;
+                
+                // Actualizar detalles de la cita
+                document.getElementById('summaryDate').textContent = formatDate(appointmentDate);
+                document.getElementById('summaryTime').textContent = appointmentData.time;
+                document.getElementById('summaryLocation').textContent = appointmentData.location;
+                document.getElementById('summaryDuration').textContent = appointmentData.duration;
+                
+                // Actualizar precio
+                document.getElementById('summaryPrice').textContent = appointmentData.price;
+                
+                // Actualizar estilista
+                document.getElementById('summaryStylistName').textContent = appointmentData.stylist;
+            } else {
+                console.error('No se encontraron datos de la cita en localStorage');
+            }
+        }
+
+        // Formatear fecha
+        function formatDate(date) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('es-ES', options);
+        }
+
+        // Confirmar reserva
+        function confirmReservation() {
+            const appointmentData = JSON.parse(localStorage.getItem('appointmentData'));
+            
+            if (appointmentData) {
+                // Obtener citas existentes
+                let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+                
+                // Agregar nueva cita
+                appointments.push(appointmentData);
+                
+                // Guardar en localStorage
+                localStorage.setItem('appointments', JSON.stringify(appointments));
+                
+                // Limpiar datos temporales
+                localStorage.removeItem('appointmentData');
+                localStorage.removeItem('selectedService');
+                localStorage.removeItem('rescheduleIndex');
+                
+                // Mostrar modal de éxito
+                document.getElementById('successModal').classList.add('active');
+            }
+        }
+
+        // Volver al paso anterior
+        function goBack() {
+            window.history.back();
+        }
+
+        // Añadir al calendario
+        function addToCalendar() {
+            const appointmentData = JSON.parse(localStorage.getItem('appointmentData'));
+            if (appointmentData) {
+                const appointmentDate = new Date(appointmentData.date);
+                alert(`Añadiendo cita al calendario...\n\n📅 ${formatDate(appointmentDate)}\n🕐 ${appointmentData.time}\n✂️ ${appointmentData.service}`);
+            }
+        }
+
+        // Compartir reserva
+        function shareReservation() {
+            const appointmentData = JSON.parse(localStorage.getItem('appointmentData'));
+            if (appointmentData) {
+                const appointmentDate = new Date(appointmentData.date);
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Mi reserva en AppSalón',
+                        text: `Tengo una cita el ${formatDate(appointmentDate)} a las ${appointmentData.time} para ${appointmentData.service}`,
+                    })
+                    .catch((error) => console.log('Error sharing:', error));
+                } else {
+                    alert(`Compartir reserva:\n\n${formatDate(appointmentDate)}\n${appointmentData.time}\n${appointmentData.service}`);
+                }
+            }
+        }
+
+        // Obtener direcciones
+        function getDirections() {
+            alert('Abriendo navegación a:\n\n📍 Calle 10 #5-30, Centro');
+            // window.open('https://maps.google.com/?q=Calle+10+5-30+Centro');
+        }
+
+        // Contactar salón
+        function contactSalon() {
+            alert('Opciones de contacto:\n\n📞 Teléfono: +57 300 123 4567\n📧 Email: info@appsalon.com\n💬 WhatsApp disponible');
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        // Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', loadAppointmentData);
+    </script>
+</body>
+</html>

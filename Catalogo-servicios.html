@@ -1,0 +1,750 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Catálogo de Servicios</title>
+    <style>
+        /* Estilos del catálogo (los mismos que tenías) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-lg) var(--space-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .greeting {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-name {
+            color: white;
+            font-size: clamp(22px, 6vw, 26px);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--error);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Content */
+        .content {
+            padding: 0 var(--space-md) var(--space-md);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .section-title {
+            font-size: clamp(16px, 4vw, 18px);
+            font-weight: 600;
+            color: white;
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Service Card */
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            display: flex;
+            gap: var(--space-md);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card:active {
+            transform: translateY(-2px);
+        }
+
+        .service-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--primary) 0%, #5a38a3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .service-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service-header {
+            margin-bottom: var(--space-xs);
+        }
+
+        .service-name {
+            font-size: clamp(15px, 4vw, 16px);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .service-meta {
+            display: flex;
+            gap: var(--space-md);
+            font-size: clamp(12px, 3vw, 14px);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .service-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--warning);
+            font-weight: 500;
+        }
+
+        .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-price {
+            font-size: clamp(16px, 4.5vw, 18px);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .service-from {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .quick-book-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 36px;
+        }
+
+        .quick-book-btn:hover {
+            background: #5a38a3;
+            transform: scale(1.05);
+        }
+
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            background: rgba(107, 70, 193, 0.1);
+            color: var(--primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: var(--space-sm) var(--space-md);
+            box-shadow: 0px -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: var(--radius-sm);
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: rgba(107, 70, 193, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--primary);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 375px) {
+            .service-card {
+                padding: var(--space-sm);
+                gap: var(--space-sm);
+            }
+
+            .service-image {
+                width: 70px;
+                height: 70px;
+                font-size: 32px;
+            }
+
+            .service-meta {
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+
+            .quick-book-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <div class="greeting">Hola,</div>
+                    <div class="user-name" id="userName">Cargando...</div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="window.location.href='Centro-de-Notificaciones.html'">
+                        🔔
+                        <span class="notification-badge"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="section-header">
+                <h2 class="section-title">Servicios Populares</h2>
+                <span class="results-count">15 servicios</span>
+            </div>
+
+            <!-- Service Card 1 -->
+            <div class="service-card">
+                <div class="service-image">✂️</div>
+                <div class="service-info">
+                    <div class="service-header">
+                        <div class="category-badge">CORTE</div>
+                        <div class="service-name">Corte de Cabello</div>
+                        <div class="service-meta">
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                <span>30 min</span>
+                            </div>
+                            <div class="service-rating">
+                                <span>⭐</span>
+                                <span>4.8 (120)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="service-from">Desde </span>$35.000
+                        </div>
+                        <button class="quick-book-btn" onclick="viewServiceDetails(1)">Detalles</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Card 2 -->
+            <div class="service-card">
+                <div class="service-image">🎨</div>
+                <div class="service-info">
+                    <div class="service-header">
+                        <div class="category-badge">COLOR</div>
+                        <div class="service-name">Tinte Completo</div>
+                        <div class="service-meta">
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                <span>90 min</span>
+                            </div>
+                            <div class="service-rating">
+                                <span>⭐</span>
+                                <span>4.9 (89)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="service-from">Desde </span>$120.000
+                        </div>
+                        <button class="quick-book-btn" onclick="viewServiceDetails(2)">Detalles</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Card 3 -->
+            <div class="service-card">
+                <div class="service-image">✨</div>
+                <div class="service-info">
+                    <div class="service-header">
+                        <div class="category-badge">TRATAMIENTO</div>
+                        <div class="service-name">Tratamiento de Keratina</div>
+                        <div class="service-meta">
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                <span>120 min</span>
+                            </div>
+                            <div class="service-rating">
+                                <span>⭐</span>
+                                <span>4.7 (56)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="service-from">Desde </span>$180.000
+                        </div>
+                        <button class="quick-book-btn" onclick="viewServiceDetails(3)">Detalles</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Card 4 -->
+            <div class="service-card">
+                <div class="service-image">💅</div>
+                <div class="service-info">
+                    <div class="service-header">
+                        <div class="category-badge">UÑAS</div>
+                        <div class="service-name">Manicure Completo</div>
+                        <div class="service-meta">
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                <span>45 min</span>
+                            </div>
+                            <div class="service-rating">
+                                <span>⭐</span>
+                                <span>4.8 (102)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="service-from">Desde </span>$40.000
+                        </div>
+                        <button class="quick-book-btn" onclick="viewServiceDetails(4)">Detalles</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Card 5 -->
+            <div class="service-card">
+                <div class="service-image">💇‍♀️</div>
+                <div class="service-info">
+                    <div class="service-header">
+                        <div class="category-badge">CORTE</div>
+                        <div class="service-name">Corte + Peinado</div>
+                        <div class="service-meta">
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                <span>60 min</span>
+                            </div>
+                            <div class="service-rating">
+                                <span>⭐</span>
+                                <span>4.9 (145)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="service-from">Desde </span>$55.000
+                        </div>
+                        <button class="quick-book-btn" onclick="viewServiceDetails(5)">Detalles</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Card 6 -->
+            <div class="service-card">
+                <div class="service-image">🧖‍♀️</div>
+                <div class="service-info">
+                    <div class="service-header">
+                        <div class="category-badge">SPA</div>
+                        <div class="service-name">Masaje Capilar</div>
+                        <div class="service-meta">
+                            <div class="meta-item">
+                                <span>⏱️</span>
+                                <span>30 min</span>
+                            </div>
+                            <div class="service-rating">
+                                <span>⭐</span>
+                                <span>5.0 (78)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="service-from">Desde </span>$25.000
+                        </div>
+                        <button class="quick-book-btn" onclick="viewServiceDetails(6)">Detalles</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-items">
+                <div class="nav-item active" onclick="window.location.href='Dashboard-Cliente.html'">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Inicio</div>
+                </div>
+                <div class="nav-item" onclick="goToExplore()">
+                    <div class="nav-icon">🔍</div>
+                    <div class="nav-label">Servicios</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='MisCitas.html'">
+                    <div class="nav-icon">📅</div>
+                    <div class="nav-label">Citas</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='Perfil-de-Usuario.html'">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Perfil</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de servicios
+        const servicesData = {
+            1: {
+                id: 1,
+                name: "Corte de Cabello Profesional",
+                category: "CORTE",
+                icon: "✂️",
+                duration: "30 min",
+                rating: 4.8,
+                reviews: 120,
+                bookings: 1245,
+                location: "Centro",
+                price: 35000,
+                description: "Corte de cabello profesional adaptado a tu estilo y tipo de rostro. Incluye consulta personalizada, lavado con productos premium y secado con técnica profesional.",
+                additionalDescription: "Nuestros estilistas están capacitados en las últimas tendencias y técnicas de corte para garantizar un resultado excepcional.",
+                benefits: [
+                    "Consulta personalizada con estilista certificado",
+                    "Técnicas adaptadas a tu tipo de cabello",
+                    "Productos de alta calidad",
+                    "Asesoramiento de estilo post-corte"
+                ],
+                stylists: [
+                    { name: "Ana María García", specialty: "Especialista en cortes modernos", rating: 4.9, reviews: 89 },
+                    { name: "Carlos Mendoza", specialty: "Experto en estilos clásicos", rating: 4.8, reviews: 76 },
+                    { name: "Laura Rodríguez", specialty: "Tendencias y creatividad", rating: 5.0, reviews: 102 }
+                ]
+            },
+            2: {
+                id: 2,
+                name: "Tinte Completo",
+                category: "COLOR",
+                icon: "🎨",
+                duration: "90 min",
+                rating: 4.9,
+                reviews: 89,
+                bookings: 856,
+                location: "Centro",
+                price: 120000,
+                description: "Aplicación profesional de tinte con productos de alta calidad que respetan tu cabello. Incluye diagnóstico capilar, selección de tono personalizada y tratamiento post-coloración.",
+                additionalDescription: "Utilizamos tintes libres de amoníaco y con ingredientes nutritivos para mantener tu cabello saludable y brillante.",
+                benefits: [
+                    "Diagnóstico capilar personalizado",
+                    "Tintes libres de amoníaco",
+                    "Tratamiento nutritivo post-coloración",
+                    "Asesoramiento de mantenimiento"
+                ],
+                stylists: [
+                    { name: "María Fernanda López", specialty: "Especialista en coloración", rating: 4.9, reviews: 67 },
+                    { name: "Ricardo Silva", specialty: "Técnicas de color avanzadas", rating: 4.8, reviews: 54 }
+                ]
+            },
+            3: {
+                id: 3,
+                name: "Tratamiento de Keratina",
+                category: "TRATAMIENTO",
+                icon: "✨",
+                duration: "120 min",
+                rating: 4.7,
+                reviews: 56,
+                bookings: 423,
+                location: "Centro",
+                price: 180000,
+                description: "Tratamiento profesional de keratina que elimina el frizz, alisa el cabello y restaura su salud. Efecto duradero de hasta 3 meses.",
+                additionalDescription: "Ideal para cabellos rizados, ondulados o con mucho frizz. Resultados inmediatos y progresivos que mejoran con el tiempo.",
+                benefits: [
+                    "Eliminación del frizz hasta en 85%",
+                    "Cabello más manejable y brillante",
+                    "Efecto duradero hasta 3 meses",
+                    "Reparación de daños capilares"
+                ],
+                stylists: [
+                    { name: "Patricia Gómez", specialty: "Tratamientos capilares", rating: 4.9, reviews: 89 },
+                    { name: "Andrea Ramírez", specialty: "Terapias reconstructivas", rating: 4.7, reviews: 45 }
+                ]
+            },
+            4: {
+                id: 4,
+                name: "Manicure Completo",
+                category: "UÑAS",
+                icon: "💅",
+                duration: "45 min",
+                rating: 4.8,
+                reviews: 102,
+                bookings: 1567,
+                location: "Centro",
+                price: 40000,
+                description: "Servicio completo de manicure que incluye limado, cutículas, hidratación y esmaltado profesional. Opción de esmalte regular o semipermanente.",
+                additionalDescription: "Utilizamos productos de primera calidad y técnicas que protegen la salud de tus uñas y cutículas.",
+                benefits: [
+                    "Limpieza y cuidado de cutículas",
+                    "Hidratación profunda con productos especializados",
+                    "Esmaltado profesional sin dañar la uña",
+                    "Duración extendida con esmalte semipermanente"
+                ],
+                stylists: [
+                    { name: "Sofia Martínez", specialty: "Manicure artístico", rating: 4.9, reviews: 112 },
+                    { name: "Camila Rodríguez", specialty: "Uñas naturales y cuidado", rating: 4.8, reviews: 87 }
+                ]
+            },
+            5: {
+                id: 5,
+                name: "Corte + Peinado",
+                category: "CORTE",
+                icon: "💇‍♀️",
+                duration: "60 min",
+                rating: 4.9,
+                reviews: 145,
+                bookings: 987,
+                location: "Centro",
+                price: 55000,
+                description: "Combinación perfecta: corte profesional adaptado a tu estilo seguido de un peinado completo para lucir tu nuevo look inmediatamente.",
+                additionalDescription: "Ideal para eventos especiales o simplemente para consentirte con un cambio de look completo.",
+                benefits: [
+                    "Corte personalizado según tu rostro y estilo",
+                    "Lavado con productos premium",
+                    "Peinado profesional para cualquier ocasión",
+                    "Asesoramiento de mantenimiento en casa"
+                ],
+                stylists: [
+                    { name: "Ana María García", specialty: "Especialista en cortes modernos", rating: 4.9, reviews: 89 },
+                    { name: "Laura Rodríguez", specialty: "Tendencias y creatividad", rating: 5.0, reviews: 102 }
+                ]
+            },
+            6: {
+                id: 6,
+                name: "Masaje Capilar",
+                category: "SPA",
+                icon: "🧖‍♀️",
+                duration: "30 min",
+                rating: 5.0,
+                reviews: 78,
+                bookings: 654,
+                location: "Centro",
+                price: 25000,
+                description: "Relajante masaje capilar que estimula la circulación, promueve el crecimiento del cabello y reduce el estrés. Incluye aceites esenciales.",
+                additionalDescription: "Perfecto para liberar tensiones mientras cuidas la salud de tu cuero cabelludo y cabello.",
+                benefits: [
+                    "Estimulación de la circulación sanguínea",
+                    "Reducción del estrés y tensión",
+                    "Promoción del crecimiento capilar",
+                    "Hidratación profunda del cuero cabelludo"
+                ],
+                stylists: [
+                    { name: "Elena Torres", specialty: "Terapias relajantes", rating: 4.9, reviews: 67 },
+                    { name: "Daniela Castro", specialty: "Bienestar capilar", rating: 5.0, reviews: 54 }
+                ]
+            }
+        };
+
+              // Función para cargar el nombre del usuario desde localStorage
+         function loadUserName() {
+            const CURRENT_USER_KEY = 'appSalonCurrentUser';
+            const currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+        
+            if (currentUser && currentUser.fullName) {
+             // Actualizar el nombre en el header
+                document.querySelector('.user-name').textContent = currentUser.fullName;
+            } else {
+            // Si no hay usuario logueado, redirigir al login
+              window.location.href = 'Login.html';
+            }
+         }
+
+        // Llamar la función cuando la página cargue
+         document.addEventListener('DOMContentLoaded', function() {
+            loadUserName();
+        });
+
+        // Función para navegar a la página de detalles
+        function viewServiceDetails(serviceId) {
+            // Guardar el ID del servicio en localStorage
+            localStorage.setItem('selectedServiceId', serviceId);
+            // Redirigir a la página de detalles
+            window.location.href = 'Detalles-servicios.html';
+        }
+
+        // Función para ir a explorar (placeholder)
+        function goToExplore() {
+            // Esta función puede implementarse según necesidades
+            console.log("Navegando a explorar servicios");
+        }
+    </script>
+</body>
+</html>

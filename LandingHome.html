@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Pantalla 1: Landing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 50%, #4a2d85 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero {
+            color: white;
+            padding: var(--space-2xl) var(--space-md);
+            text-align: center;
+            padding-top: clamp(48px, 10vh, 80px);
+            padding-bottom: clamp(32px, 8vh, 64px);
+        }
+
+        .hero h1 {
+            font-size: clamp(24px, 6vw, 28px);
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            line-height: 1.285;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(14px, 4vw, 16px);
+            opacity: 0.95;
+            margin-bottom: var(--space-xl);
+            line-height: 1.5;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            min-height: 44px;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--bg-white);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Services Grid */
+        .services-section {
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        .section-title {
+            font-size: clamp(20px, 5vw, 22px);
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            color: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            max-width: 100%;
+        }
+
+
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-icon {
+            font-size: clamp(40px, 10vw, 48px);
+            margin-bottom: var(--space-md);
+            display: block;
+        }
+
+        .service-title {
+            font-size: clamp(14px, 4vw, 16px);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            color: white;
+        }
+
+        .service-count {
+            font-size: clamp(12px, 3.5vw, 14px);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        .feature-item {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            align-items: start;
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            font-size: clamp(14px, 4vw, 16px);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            color: white;
+        }
+
+        .feature-content p {
+            font-size: clamp(12px, 3.5vw, 14px);
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: var(--space-xl) var(--space-md);
+            padding-bottom: var(--space-2xl);
+        }
+
+        .cta-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-title {
+            font-size: clamp(20px, 5vw, 22px);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-text {
+            font-size: clamp(14px, 4vw, 16px);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--space-lg);
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            margin-top: var(--space-sm);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-full {
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .btn-full:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 320px) {
+            .services-grid {
+                grid-template-columns: 2fr;
+            }
+        }
+
+        /* Bottom spacing */
+        .bottom-spacing {
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla 1: Landing/Home -->
+        <div class="hero">
+            <h1>Bienvenido a AppSalón</h1>
+            <p class="hero-subtitle">Reserva tu cita de belleza en segundos. Encuentra los mejores profesionales cerca de ti.</p>
+            <button class="btn btn-primary">Explorar Servicios</button>
+        </div>
+        
+        <div class="services-section">
+            <h2 class="section-title">Nuestros Servicios</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <span class="service-icon">✂️</span>
+                    <div class="service-title">Cortes</div>
+                    <div class="service-count">15 servicios</div>
+                </div>
+                
+                <div class="service-card">
+                    <span class="service-icon">🎨</span>
+                    <div class="service-title">Color</div>
+                    <div class="service-count">12 servicios</div>
+                </div>
+                
+                <div class="service-card">
+                    <span class="service-icon">✨</span>
+                    <div class="service-title">Tratamientos</div>
+                    <div class="service-count">8 servicios</div>
+                </div>
+                
+                <div class="service-card">
+                    <span class="service-icon">💅</span>
+                    <div class="service-title">Uñas</div>
+                    <div class="service-count">10 servicios</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features-section">
+            <h2 class="section-title">¿Por qué AppSalón?</h2>
+            
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-content">
+                    <h3>Reserva en 3 pasos</h3>
+                    <p>Agenda tu cita en menos de 2 minutos. Proceso simple y rápido.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">📅</div>
+                <div class="feature-content">
+                    <h3>Disponibilidad en tiempo real</h3>
+                    <p>Ve horarios disponibles al instante. Sin llamadas, sin esperas.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">💰</div>
+                <div class="feature-content">
+                    <h3>Precios transparentes</h3>
+                    <p>Conoce el precio exacto antes de reservar. Sin sorpresas.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">🔔</div>
+                <div class="feature-content">
+                    <h3>Recordatorios automáticos</h3>
+                    <p>Recibe notificaciones 24 horas antes de tu cita.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <div class="cta-card">
+                <h2 class="cta-title">¿Listo para comenzar?</h2>
+                <p class="cta-text">Únete a miles de usuarios que ya disfrutan de una mejor experiencia de belleza</p>
+                <button 
+                    onclick="window.location.href='Registro.html'" 
+                    class="btn btn-full">
+                    Crear Cuenta Gratis
+                </button>
+                <button 
+                    onclick="window.location.href='Login.html'" 
+                    class="btn btn-secondary">
+                    Iniciar Sesións
+                </button>
+            </div>
+        </div>
+        
+        <div class="bottom-spacing"></div>
+    </div>
+</body>
+</html>

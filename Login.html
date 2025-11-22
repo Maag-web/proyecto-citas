@@ -1,0 +1,459 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Iniciar Sesión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 50%, #4a2d85 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-title {
+            font-size: clamp(16px, 4.5vw, 18px);
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Content */
+        .content {
+            padding: var(--space-xl) var(--space-md);
+            padding-bottom: var(--space-2xl);
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            padding: var(--space-xl) 0;
+            margin-bottom: var(--space-lg);
+        }
+
+        .logo-icon {
+            font-size: clamp(56px, 15vw, 72px);
+            margin-bottom: var(--space-md);
+        }
+
+        .logo-text {
+            font-size: clamp(24px, 6vw, 28px);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-sm);
+        }
+
+        .logo-subtitle {
+            font-size: clamp(14px, 3.5vw, 16px);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+            margin-bottom: var(--space-md);
+        }
+
+        @media (max-width: 375px) {
+            .card {
+                padding: var(--space-lg);
+            }
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-label {
+            display: block;
+            font-size: clamp(13px, 3.5vw, 14px);
+            font-weight: 500;
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            min-height: 48px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0px 0px 0px 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            min-height: 44px;
+            transition: all 0.3s;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a38a3;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 12px rgba(107, 70, 193, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(107, 70, 193, 0.1);
+        }
+
+        /* Links */
+        .link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: clamp(13px, 3.5vw, 14px);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Info text */
+        .info-text {
+            font-size: clamp(12px, 3vw, 14px);
+            color: var(--text-secondary);
+            margin-top: var(--space-md);
+            line-height: 1.5;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 375px) {
+            .content {
+                padding: var(--space-lg) var(--space-md);
+            }
+            
+            .btn {
+                font-size: 14px;
+                padding: 10px 20px;
+                min-height: 44px;
+            }
+            
+            .form-input {
+                font-size: 16px;
+                padding: 10px 14px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .logo-section {
+                padding: var(--space-lg) 0;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-md);
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .alert-success {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <button onclick="window.location.href='LandingHome.html'" class="back-btn">←</button>
+                <div class="header-title">Iniciar Sesión</div>
+                <div style="width: 44px;"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-icon">💇</div>
+                <div class="logo-text">AppSalón</div>
+                <div class="logo-subtitle">Tu belleza, tu horario</div>
+            </div>
+
+            <!-- Alert -->
+            <div class="alert alert-error" id="errorAlert"></div>
+            <div class="alert alert-success" id="successAlert"></div>
+
+            <!-- Login Form Card -->
+            <div class="card">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input 
+                            type="email" 
+                            class="form-input" 
+                            placeholder="tu@email.com"
+                            autocomplete="email"
+                            required
+                            id="loginEmail"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Contraseña</label>
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            placeholder="••••••••"
+                            autocomplete="current-password"
+                            required
+                            id="loginPassword"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Ingresar</button>
+                    
+                </form>
+            </div>
+            
+            <!-- Register Card -->
+            <div class="card">
+                <p class="text-center info-text" style="margin-bottom: 16px; color: var(--text-primary); font-weight: 500;">
+                    ¿No tienes cuenta?
+                </p>
+                <button onclick="window.location.href='Registro.html'" class="btn btn-secondary">Crear Cuenta</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de autenticación con localStorage
+        const USER_STORAGE_KEY = 'appSalonUsers';
+        const CURRENT_USER_KEY = 'appSalonCurrentUser';
+
+        // Inicializar datos de ejemplo si no existen
+        function initializeSampleData() {
+            if (!localStorage.getItem(USER_STORAGE_KEY)) {
+                const sampleUsers = [
+                    {
+                        id: 1,
+                        fullName: 'María González',
+                        email: 'maria@ejemplo.com',
+                        phone: '300 123 4567',
+                        password: 'password123'
+                    }
+                ];
+                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sampleUsers));
+            }
+        }
+
+        // Obtener todos los usuarios
+        function getUsers() {
+            return JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || [];
+        }
+
+        // Obtener usuario actual
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+        }
+
+        // Establecer usuario actual
+        function setCurrentUser(user) {
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+        }
+
+        // Iniciar sesión
+        function loginUser(email, password) {
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                setCurrentUser(user);
+                return { success: true, user };
+            } else {
+                return { success: false, message: 'Email o contraseña incorrectos' };
+            }
+        }
+
+        // Mostrar alerta
+        function showAlert(message, type) {
+            const alert = document.getElementById(type + 'Alert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Manejar login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = loginUser(email, password);
+            
+            if (result.success) {
+                showAlert('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'Dashboard-Cliente.html';
+                }, 1500);
+            } else {
+                showAlert(result.message, 'error');
+            }
+        });
+
+        // Inicializar datos al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSampleData();
+            
+            // Si ya hay un usuario logueado, redirigir al perfil
+            if (getCurrentUser()) {
+                window.location.href = 'Perfil-de-Usuario.html';
+            }
+        });
+    </script>
+</body>
+</html>

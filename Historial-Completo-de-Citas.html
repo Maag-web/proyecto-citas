@@ -1,0 +1,1409 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Historial Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-title {
+            font-size: clamp(18px, 5vw, 20px);
+            font-weight: 700;
+            color: white;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--warning);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Search Bar */
+        .search-section {
+            margin-bottom: var(--space-md);
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: var(--space-sm);
+            overflow-x: auto;
+            padding: var(--space-sm) 0;
+            scrollbar-width: none;
+        }
+
+        .filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .chip.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Content */
+        .content {
+            padding: var(--space-md);
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: var(--space-md);
+            background: var(--bg-main);
+            border-radius: var(--radius-sm);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stats-detail {
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-item {
+            font-size: 13px;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-left: 4px;
+        }
+
+        /* Timeline */
+        .timeline-section {
+            margin-bottom: var(--space-lg);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding: 0 var(--space-xs);
+        }
+
+        .timeline-month {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-count {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        /* History Card */
+        .history-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .history-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-md);
+        }
+
+        .history-date {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .date-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #2c7a7b 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .date-day {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .date-month {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .date-info {
+            flex: 1;
+        }
+
+        .history-datetime {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .history-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--warning);
+        }
+
+        .history-body {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .service-icon-box {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(107, 70, 193, 0.1) 0%, rgba(90, 56, 163, 0.1) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .service-details {
+            flex: 1;
+        }
+
+        .service-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .service-meta {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+
+        .service-category {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(107, 70, 193, 0.1);
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .service-duration {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .service-stylist {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .service-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: right;
+        }
+
+        .history-footer {
+            display: flex;
+            gap: var(--space-sm);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--text-secondary);
+            border: 2px solid var(--border);
+            flex: 1;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-secondary);
+            background: var(--bg-main);
+        }
+
+        .btn-primary-small {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary-small:hover {
+            background: #5a38a3;
+        }
+
+        .btn-secondary-small {
+            background: var(--secondary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary-small:hover {
+            background: #2c7a7b;
+        }
+
+        /* Favorites Section */
+        .favorites-section {
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            padding: 0 var(--space-xs);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .section-icon {
+            font-size: 18px;
+        }
+
+        .service-item {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .service-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-details {
+            flex: 1;
+        }
+
+        .service-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .service-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .service-rating {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--warning);
+        }
+
+        /* Empty State */
+        .empty-state {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: var(--space-md);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .empty-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Load More */
+        .load-more {
+            text-align: center;
+            margin-top: var(--space-lg);
+        }
+
+        .btn-load-more {
+            padding: 12px 32px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-load-more:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: var(--space-sm) var(--space-md);
+            box-shadow: 0px -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: var(--radius-sm);
+            flex: 1;
+        }
+
+        .nav-item:hover {
+            background: rgba(107, 70, 193, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--primary);
+        }
+
+        /* Rating Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: var(--space-md);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-md);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: var(--space-lg);
+        }
+
+        .rating-section {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .rating-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .star {
+            font-size: 32px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star.active {
+            color: var(--warning);
+        }
+
+        .rating-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .modal-footer {
+            padding: var(--space-md) var(--space-lg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn-modal {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            flex: 1;
+        }
+
+        .btn-modal-cancel {
+            background: white;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-modal-cancel:hover {
+            background: var(--bg-main);
+        }
+
+        .btn-modal-submit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-modal-submit:hover {
+            background: #5a38a3;
+        }
+
+        .btn-modal-submit:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        /* Favorite Button */
+        .favorite-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: all 0.3s;
+            color: #ddd;
+        }
+
+        .favorite-btn.active {
+            color: var(--error);
+        }
+
+        .favorite-btn:hover {
+            background: rgba(245, 101, 101, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: var(--space-sm);
+            }
+
+            .stat-box {
+                padding: var(--space-sm);
+            }
+
+            .history-card {
+                padding: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='MisCitas.html'">←</button>
+                <div class="header-title">Historial Completo</div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stats-title">
+                    <span>📊</span>
+                    Tu Resumen
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-icon">✓</div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Citas Totales</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value">$840K</div>
+                        <div class="stat-label">Total Gastado</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value">4.9</div>
+                        <div class="stat-label">Calificación</div>
+                    </div>
+                </div>
+                <div class="stats-detail">
+                    <div class="detail-item">
+                        <span class="detail-label">Servicio favorito:</span>
+                        <span class="detail-value">Corte de Cabello</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Ahorro total:</span>
+                        <span class="detail-value" style="color: var(--success);">$120K</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites Section -->
+            <div class="favorites-section" id="favorites-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">❤️</span>
+                        Tus Favoritos
+                    </h2>
+                </div>
+                <div id="favorites-container">
+                    <!-- Los favoritos se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Timeline - November 2025 -->
+            <div class="timeline-section">
+                <div class="timeline-header">
+                    <div class="timeline-month">Noviembre 2025</div>
+                    <div class="timeline-count">3 servicios</div>
+                </div>
+
+                <div class="history-card" id="cita-1">
+                    <div class="history-header">
+                        <div class="history-date">
+                            <div class="date-icon">
+                                <div class="date-day">15</div>
+                                <div class="date-month">Nov</div>
+                            </div>
+                            <div class="date-info">
+                                <div class="history-datetime">Viernes, 15 de Nov</div>
+                                <div class="history-time">3:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="rating-display" id="rating-cita-1">Sin calificar</div>
+                    </div>
+
+                    <div class="history-body">
+                        <div class="service-icon-box">💇‍♀️</div>
+                        <div class="service-details">
+                            <div class="service-name">Peinado Elegante</div>
+                            <div class="service-meta">
+                                <span class="service-category">Peinado</span>
+                                <span class="service-duration">⏱️ 45 min</span>
+                            </div>
+                            <div class="service-stylist">👩 Laura Rodríguez</div>
+                        </div>
+                        <div class="service-price">$45.000</div>
+                    </div>
+
+                    <div class="history-footer">
+                        <button class="btn-small btn-outline" onclick="openRatingModal('cita-1', 'Peinado Elegante')">Calificar</button>
+                        <button class="favorite-btn" id="fav-cita-1" onclick="toggleFavorite('cita-1')">❤️</button>
+                    </div>
+                </div>
+
+                <div class="history-card" id="cita-2">
+                    <div class="history-header">
+                        <div class="history-date">
+                            <div class="date-icon">
+                                <div class="date-day">08</div>
+                                <div class="date-month">Nov</div>
+                            </div>
+                            <div class="date-info">
+                                <div class="history-datetime">Viernes, 8 de Nov</div>
+                                <div class="history-time">10:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="rating-display" id="rating-cita-2">Sin calificar</div>
+                    </div>
+
+                    <div class="history-body">
+                        <div class="service-icon-box">✂️</div>
+                        <div class="service-details">
+                            <div class="service-name">Corte y Barba</div>
+                            <div class="service-meta">
+                                <span class="service-category">Corte</span>
+                                <span class="service-duration">⏱️ 40 min</span>
+                            </div>
+                            <div class="service-stylist">👨 Carlos Mendoza</div>
+                        </div>
+                        <div class="service-price">$40.000</div>
+                    </div>
+
+                    <div class="history-footer">
+                        <button class="btn-small btn-outline" onclick="openRatingModal('cita-2', 'Corte y Barba')">Calificar</button>
+                        <button class="favorite-btn" id="fav-cita-2" onclick="toggleFavorite('cita-2')">❤️</button>
+                    </div>
+                </div>
+
+                <div class="history-card" id="cita-3">
+                    <div class="history-header">
+                        <div class="history-date">
+                            <div class="date-icon">
+                                <div class="date-day">01</div>
+                                <div class="date-month">Nov</div>
+                            </div>
+                            <div class="date-info">
+                                <div class="history-datetime">Viernes, 1 de Nov</div>
+                                <div class="history-time">2:30 PM</div>
+                            </div>
+                        </div>
+                        <div class="rating-display" id="rating-cita-3">Sin calificar</div>
+                    </div>
+
+                    <div class="history-body">
+                        <div class="service-icon-box">💅</div>
+                        <div class="service-details">
+                            <div class="service-name">Manicure Spa</div>
+                            <div class="service-meta">
+                                <span class="service-category">Uñas</span>
+                                <span class="service-duration">⏱️ 60 min</span>
+                            </div>
+                            <div class="service-stylist">👩 Ana García</div>
+                        </div>
+                        <div class="service-price">$38.000</div>
+                    </div>
+
+                    <div class="history-footer">
+                        <button class="btn-small btn-outline" onclick="openRatingModal('cita-3', 'Manicure Spa')">Calificar</button>
+                        <button class="favorite-btn" id="fav-cita-3" onclick="toggleFavorite('cita-3')">❤️</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline - October 2025 -->
+            <div class="timeline-section">
+                <div class="timeline-header">
+                    <div class="timeline-month">Octubre 2025</div>
+                    <div class="timeline-count">4 servicios</div>
+                </div>
+
+                <div class="history-card" id="cita-4">
+                    <div class="history-header">
+                        <div class="history-date">
+                            <div class="date-icon">
+                                <div class="date-day">28</div>
+                                <div class="date-month">Oct</div>
+                            </div>
+                            <div class="date-info">
+                                <div class="history-datetime">Lunes, 28 de Oct</div>
+                                <div class="history-time">11:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="rating-display" id="rating-cita-4">Sin calificar</div>
+                    </div>
+
+                    <div class="history-body">
+                        <div class="service-icon-box">✂️</div>
+                        <div class="service-details">
+                            <div class="service-name">Corte de Cabello</div>
+                            <div class="service-meta">
+                                <span class="service-category">Corte</span>
+                                <span class="service-duration">⏱️ 30 min</span>
+                            </div>
+                            <div class="service-stylist">👩 Ana García</div>
+                        </div>
+                        <div class="service-price">$35.000</div>
+                    </div>
+
+                    <div class="history-footer">
+                        <button class="btn-small btn-outline" onclick="openRatingModal('cita-4', 'Corte de Cabello')">Calificar</button>
+                        <button class="favorite-btn" id="fav-cita-4" onclick="toggleFavorite('cita-4')">❤️</button>
+                    </div>
+                </div>
+
+                <div class="history-card" id="cita-5">
+                    <div class="history-header">
+                        <div class="history-date">
+                            <div class="date-icon">
+                                <div class="date-day">20</div>
+                                <div class="date-month">Oct</div>
+                            </div>
+                            <div class="date-info">
+                                <div class="history-datetime">Domingo, 20 de Oct</div>
+                                <div class="history-time">4:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="rating-display" id="rating-cita-5">Sin calificar</div>
+                    </div>
+
+                    <div class="history-body">
+                        <div class="service-icon-box">🎨</div>
+                        <div class="service-details">
+                            <div class="service-name">Coloración Completa</div>
+                            <div class="service-meta">
+                                <span class="service-category">Color</span>
+                                <span class="service-duration">⏱️ 120 min</span>
+                            </div>
+                            <div class="service-stylist">👩 Laura Rodríguez</div>
+                        </div>
+                        <div class="service-price">$95.000</div>
+                    </div>
+
+                    <div class="history-footer">
+                        <button class="btn-small btn-outline" onclick="openRatingModal('cita-5', 'Coloración Completa')">Calificar</button>
+                        <button class="favorite-btn" id="fav-cita-5" onclick="toggleFavorite('cita-5')">❤️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Modal -->
+        <div id="ratingModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Calificar Servicio</div>
+                    <div class="modal-subtitle" id="modalServiceName">Servicio</div>
+                </div>
+                <div class="modal-body">
+                    <div class="rating-section">
+                        <div class="rating-title">¿Cómo calificarías este servicio?</div>
+                        <div class="stars-container">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <div class="rating-value" id="ratingValue">Selecciona una calificación</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-modal btn-modal-cancel" onclick="closeRatingModal()">Cancelar</button>
+                    <button class="btn-modal btn-modal-submit" id="submitRating" disabled onclick="submitRating()">Enviar Calificación</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        
+    </div>
+
+    <script>
+        // Variables globales para el estado del modal
+        let currentAppointmentId = null;
+        let currentRating = 0;
+        
+        // Objeto para almacenar favoritos
+        let favorites = {};
+
+        // Objeto para almacenar calificaciones
+        let ratings = {};
+
+        // Datos de las citas para usar en favoritos
+        const appointmentsData = {
+            'cita-1': {
+                name: 'Peinado Elegante',
+                date: '15 Nov 2025',
+                stylist: 'Laura Rodríguez',
+                icon: '💇‍♀️'
+            },
+            'cita-2': {
+                name: 'Corte y Barba',
+                date: '08 Nov 2025',
+                stylist: 'Carlos Mendoza',
+                icon: '✂️'
+            },
+            'cita-3': {
+                name: 'Manicure Spa',
+                date: '01 Nov 2025',
+                stylist: 'Ana García',
+                icon: '💅'
+            },
+            'cita-4': {
+                name: 'Corte de Cabello',
+                date: '28 Oct 2025',
+                stylist: 'Ana García',
+                icon: '✂️'
+            },
+            'cita-5': {
+                name: 'Coloración Completa',
+                date: '20 Oct 2025',
+                stylist: 'Laura Rodríguez',
+                icon: '🎨'
+            }
+        };
+
+        // Inicializar favoritos y calificaciones desde localStorage
+        function initializeData() {
+            // Cargar favoritos
+            const savedFavorites = localStorage.getItem('appSalonFavorites');
+            if (savedFavorites) {
+                favorites = JSON.parse(savedFavorites);
+            }
+            
+            // Cargar calificaciones
+            const savedRatings = localStorage.getItem('appSalonRatings');
+            if (savedRatings) {
+                ratings = JSON.parse(savedRatings);
+            }
+            
+            // Actualizar interfaz
+            updateFavoriteButtons();
+            updateRatingDisplays();
+            renderFavorites();
+        }
+
+        // Alternar favorito
+        function toggleFavorite(appointmentId) {
+            if (favorites[appointmentId]) {
+                delete favorites[appointmentId];
+            } else {
+                favorites[appointmentId] = true;
+            }
+            
+            // Guardar en localStorage
+            localStorage.setItem('appSalonFavorites', JSON.stringify(favorites));
+            
+            // Actualizar interfaz
+            updateFavoriteButtons();
+            renderFavorites();
+        }
+
+        // Actualizar botones de favoritos
+        function updateFavoriteButtons() {
+            Object.keys(appointmentsData).forEach(appointmentId => {
+                const favButton = document.getElementById(`fav-${appointmentId}`);
+                if (favButton) {
+                    if (favorites[appointmentId]) {
+                        favButton.classList.add('active');
+                    } else {
+                        favButton.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Actualizar displays de calificación
+        function updateRatingDisplays() {
+            Object.keys(appointmentsData).forEach(appointmentId => {
+                const ratingElement = document.getElementById(`rating-${appointmentId}`);
+                if (ratingElement && ratings[appointmentId]) {
+                    const rating = ratings[appointmentId];
+                    ratingElement.textContent = `⭐ ${rating}.0`;
+                    ratingElement.style.color = getRatingColor(rating);
+                }
+            });
+        }
+
+        // Obtener color según la calificación
+        function getRatingColor(rating) {
+            if (rating >= 4.5) return 'var(--success)';
+            if (rating >= 3.5) return 'var(--warning)';
+            return 'var(--error)';
+        }
+
+        // Renderizar lista de favoritos
+        function renderFavorites() {
+            const favoritesContainer = document.getElementById('favorites-container');
+            const favoritesSection = document.getElementById('favorites-section');
+            
+            // Limpiar contenedor
+            favoritesContainer.innerHTML = '';
+            
+            // Obtener citas favoritas
+            const favoriteAppointments = Object.keys(favorites);
+            
+            if (favoriteAppointments.length === 0) {
+                // Mostrar estado vacío
+                favoritesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❤️</div>
+                        <div class="empty-title">No tienes favoritos aún</div>
+                        <div class="empty-text">Marca tus servicios favoritos para verlos aquí</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Mostrar sección de favoritos
+            favoritesSection.style.display = 'block';
+            
+            // Crear elementos de favoritos
+            favoriteAppointments.forEach(appointmentId => {
+                const appointment = appointmentsData[appointmentId];
+                if (appointment) {
+                    const rating = ratings[appointmentId] || 'Sin calificar';
+                    const favoriteItem = document.createElement('div');
+                    favoriteItem.className = 'service-item';
+                    favoriteItem.innerHTML = `
+                        <div class="service-icon-box">${appointment.icon}</div>
+                        <div class="service-details">
+                            <div class="service-name">${appointment.name}</div>
+                            <div class="service-date">${appointment.date} • ${appointment.stylist}</div>
+                        </div>
+                        <div class="service-rating">${rating === 'Sin calificar' ? rating : `⭐ ${rating}.0`}</div>
+                    `;
+                    favoritesContainer.appendChild(favoriteItem);
+                }
+            });
+        }
+
+        // Abrir modal de calificación
+        function openRatingModal(appointmentId, serviceName) {
+            currentAppointmentId = appointmentId;
+            
+            // Actualizar contenido del modal
+            document.getElementById('modalServiceName').textContent = serviceName;
+            
+            // Resetear estrellas
+            resetStars();
+            
+            // Mostrar modal
+            document.getElementById('ratingModal').style.display = 'flex';
+        }
+
+        // Cerrar modal de calificación
+        function closeRatingModal() {
+            document.getElementById('ratingModal').style.display = 'none';
+            resetStars();
+            currentAppointmentId = null;
+            currentRating = 0;
+        }
+
+        // Resetear estrellas a estado inicial
+        function resetStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.classList.remove('active');
+            });
+            document.getElementById('ratingValue').textContent = 'Selecciona una calificación';
+            document.getElementById('submitRating').disabled = true;
+            currentRating = 0;
+        }
+
+        // Configurar eventos para las estrellas
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star');
+            
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const value = parseInt(this.getAttribute('data-value'));
+                    setRating(value);
+                });
+                
+                star.addEventListener('mouseover', function() {
+                    const value = parseInt(this.getAttribute('data-value'));
+                    highlightStars(value);
+                });
+            });
+            
+            // Restablecer estrellas al salir del contenedor
+            document.querySelector('.stars-container').addEventListener('mouseleave', function() {
+                highlightStars(currentRating);
+            });
+            
+            // Inicializar datos
+            initializeData();
+        });
+
+        // Establecer calificación
+        function setRating(value) {
+            currentRating = value;
+            highlightStars(value);
+            
+            // Actualizar texto de calificación
+            const ratingTexts = [
+                'Muy malo',
+                'Malo',
+                'Regular',
+                'Bueno',
+                'Excelente'
+            ];
+            document.getElementById('ratingValue').textContent = `${value}.0 - ${ratingTexts[value-1]}`;
+            
+            // Habilitar botón de envío
+            document.getElementById('submitRating').disabled = false;
+        }
+
+        // Resaltar estrellas hasta el valor especificado
+        function highlightStars(value) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                const starValue = parseInt(star.getAttribute('data-value'));
+                if (starValue <= value) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Enviar calificación
+        function submitRating() {
+            if (currentRating === 0) {
+                alert('Por favor selecciona una calificación');
+                return;
+            }
+            
+            // Guardar calificación en localStorage
+            ratings[currentAppointmentId] = currentRating;
+            localStorage.setItem('appSalonRatings', JSON.stringify(ratings));
+            
+            // Actualizar la calificación en la tarjeta correspondiente
+            updateAppointmentRating(currentAppointmentId, currentRating);
+            
+            // Mostrar mensaje de éxito
+            alert(`¡Calificación enviada! Has calificado con ${currentRating} estrellas.`);
+            
+            // Cerrar modal
+            closeRatingModal();
+            
+            // Actualizar favoritos si es necesario
+            renderFavorites();
+        }
+
+        // Actualizar la calificación en la tarjeta de la cita
+        function updateAppointmentRating(appointmentId, newRating) {
+            // Buscar el elemento de calificación correspondiente
+            const ratingElement = document.getElementById(`rating-${appointmentId}`);
+            
+            if (ratingElement) {
+                // Actualizar el texto de calificación
+                ratingElement.textContent = `⭐ ${newRating}.0`;
+                
+                // Cambiar el color según la calificación
+                ratingElement.style.color = getRatingColor(newRating);
+                
+                console.log(`Calificación guardada para ${appointmentId}: ${newRating}`);
+            }
+        }
+    </script>
+</body>
+</html>

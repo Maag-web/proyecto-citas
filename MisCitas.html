@@ -1,0 +1,993 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppSalón - Mis Citas</title>
+    <style>
+        /* Tus estilos existentes se mantienen igual */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B46C1;
+            --secondary: #38B2AC;
+            --success: #48BB78;
+            --error: #F56565;
+            --warning: #ED8936;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --bg-main: #F7FAFC;
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #6B46C1 0%, #5a38a3 100%);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-title {
+            font-size: clamp(18px, 5vw, 20px);
+            font-weight: 700;
+            color: white;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            padding: var(--space-sm);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Content */
+        .content {
+            padding: var(--space-md);
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Appointment Card */
+        .appointment-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .appointment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .appointment-card.upcoming {
+            border-left-color: var(--success);
+        }
+
+        .appointment-card.completed {
+            border-left-color: var(--secondary);
+        }
+
+        .appointment-card.cancelled {
+            border-left-color: var(--error);
+            opacity: 0.7;
+        }
+
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-md);
+        }
+
+        .appointment-date-time {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .date-box {
+            background: linear-gradient(135deg, var(--primary) 0%, #5a38a3 100%);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            text-align: center;
+            min-width: 70px;
+            color: white;
+        }
+
+        .date-box.upcoming {
+            background: linear-gradient(135deg, var(--success) 0%, #38a169 100%);
+        }
+
+        .date-box.completed {
+            background: linear-gradient(135deg, var(--secondary) 0%, #2c7a7b 100%);
+        }
+
+        .date-box.cancelled {
+            background: linear-gradient(135deg, var(--error) 0%, #c53030 100%);
+        }
+
+        .date-day {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .date-month {
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.9;
+            text-transform: uppercase;
+        }
+
+        .date-info {
+            flex: 1;
+        }
+
+        .appointment-time {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .appointment-duration {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.upcoming {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.completed {
+            background: rgba(56, 178, 172, 0.1);
+            color: var(--secondary);
+        }
+
+        .status-badge.cancelled {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--error);
+        }
+
+        .appointment-body {
+            margin-bottom: var(--space-md);
+        }
+
+        .service-info {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(107, 70, 193, 0.1) 0%, rgba(90, 56, 163, 0.1) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .service-details {
+            flex: 1;
+        }
+
+        .service-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .service-category {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            background: rgba(107, 70, 193, 0.1);
+            color: var(--primary);
+        }
+
+        .service-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .detail-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .appointment-actions {
+            display: flex;
+            gap: var(--space-sm);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--text-secondary);
+            border: 2px solid var(--border);
+            flex: 1;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-secondary);
+            background: var(--bg-main);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #5a38a3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #2c7a7b;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(245, 101, 101, 0.1);
+            color: var(--error);
+            border: 2px solid var(--error);
+            flex: 1;
+        }
+
+        .btn-danger:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: var(--space-2xl) var(--space-lg);
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            max-width: 380px;
+            width: 100%;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            margin-bottom: var(--space-lg);
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .modal-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .modal-body {
+            margin-bottom: var(--space-lg);
+        }
+
+        .modal-detail {
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-detail:last-child {
+            border-bottom: none;
+        }
+
+        .modal-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .modal-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 90px;
+            right: 50%;
+            transform: translateX(calc(430px / 2 - var(--space-md)));
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, #5a38a3 100%);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0px 4px 20px rgba(107, 70, 193, 0.4);
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .fab:hover {
+            transform: translateX(calc(430px / 2 - var(--space-md))) scale(1.1);
+            box-shadow: 0px 6px 24px rgba(107, 70, 193, 0.5);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: var(--space-sm) var(--space-md);
+            box-shadow: 0px -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: var(--radius-sm);
+            flex: 1;
+        }
+
+        .nav-item:hover {
+            background: rgba(107, 70, 193, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .stats-summary {
+                grid-template-columns: repeat(3, 1fr);
+                gap: var(--space-sm);
+                padding: var(--space-md);
+            }
+
+            .appointment-card {
+                padding: var(--space-md);
+            }
+
+            .date-box {
+                min-width: 60px;
+                padding: var(--space-sm);
+            }
+
+            .date-day {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='Dashboard-Cliente.html'">←</button>
+                <div class="header-title">Mis Citas</div>
+               
+            </div>
+
+            <!-- Tabs -->
+        
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Stats Summary -->
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <div class="stat-value" id="upcomingCount">0</div>
+                    <div class="stat-label">Próximas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="completedCount">0</div>
+                    <div class="stat-label">Completadas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="cancelledCount">0</div>
+                    <div class="stat-label">Canceladas</div>
+                </div>
+            </div>
+
+            <!-- Appointments List -->
+            <div id="appointmentsList">
+                <!-- Las citas se cargarán dinámicamente aquí -->
+            </div>
+        </div>
+
+        <!-- FAB -->
+        <button class="fab" onclick="newAppointment()">+</button>
+
+        <!-- Cancel Modal -->
+        <div class="modal" id="cancelModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-icon">⚠️</div>
+                    <h2 class="modal-title">¿Cancelar Cita?</h2>
+                    <p class="modal-message">
+                        ¿Estás seguro de que deseas cancelar esta cita? Esta acción no se puede deshacer.
+                    </p>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-detail">
+                        <span class="modal-label">Servicio</span>
+                        <span class="modal-value" id="cancelService">-</span>
+                    </div>
+                    <div class="modal-detail">
+                        <span class="modal-label">Fecha</span>
+                        <span class="modal-value" id="cancelDate">-</span>
+                    </div>
+                    <div class="modal-detail">
+                        <span class="modal-label">Hora</span>
+                        <span class="modal-value" id="cancelTime">-</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-outline" onclick="closeModal()">
+                        No, Mantener
+                    </button>
+                    <button class="btn btn-danger" onclick="confirmCancel()">
+                        Sí, Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal" id="successModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-icon">✓</div>
+                    <h2 class="modal-title" id="successTitle">Operación Exitosa</h2>
+                    <p class="modal-message" id="successMessage">
+                        La operación se ha completado correctamente.
+                    </p>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-success btn-full" onclick="closeModal()">
+                        Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-items">
+                <div class="nav-item" onclick="window.location.href='Dashboard-Cliente.html'">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Inicio</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='Catalogo-servicios.html'">
+                    <div class="nav-icon">🔍</div>
+                    <div class="nav-label">Servicios</div>
+                </div>
+                <div class="nav-item active" onclick="goToAppointments()">
+                    <div class="nav-icon">📅</div>
+                    <div class="nav-label">Citas</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='Perfil-de-Usuario.html'">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Perfil</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado global para manejar las citas
+        let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+        let appointmentToCancel = null;
+
+        // Función para cargar las citas
+        function loadAppointments() {
+            const appointmentsList = document.getElementById('appointmentsList');
+            
+            if (appointments.length === 0) {
+                appointmentsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📅</div>
+                        <div class="empty-title">No tienes citas programadas</div>
+                        <div class="empty-text">Agenda tu primera cita para comenzar a disfrutar de nuestros servicios</div>
+                        <button class="btn btn-primary btn-full" onclick="newAppointment()">
+                            Agendar Primera Cita
+                        </button>
+                    </div>
+                `;
+                updateStats();
+                return;
+            }
+
+            // Ordenar citas por fecha (más recientes primero)
+            appointments.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            let html = '';
+            
+            appointments.forEach((appointment, index) => {
+                const appointmentDate = new Date(appointment.date);
+                const now = new Date();
+                const isUpcoming = appointmentDate > now && appointment.status !== 'cancelled';
+                const isCompleted = appointmentDate <= now && appointment.status !== 'cancelled';
+                const isCancelled = appointment.status === 'cancelled';
+                
+                const statusClass = isUpcoming ? 'upcoming' : (isCompleted ? 'completed' : 'cancelled');
+                const statusText = isUpcoming ? 'Confirmada' : (isCompleted ? 'Completada' : 'Cancelada');
+                
+                const day = appointmentDate.getDate();
+                const month = appointmentDate.toLocaleDateString('es-ES', { month: 'short' });
+                const time = appointmentDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                
+                html += `
+                    <div class="appointment-card ${statusClass}">
+                        <div class="appointment-header">
+                            <div class="appointment-date-time">
+                                <div class="date-box ${statusClass}">
+                                    <div class="date-day">${day}</div>
+                                    <div class="date-month">${month}</div>
+                                </div>
+                                <div class="date-info">
+                                    <div class="appointment-time">${time}</div>
+                                    <div class="appointment-duration">${appointment.duration}</div>
+                                </div>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+
+                        <div class="appointment-body">
+                            <div class="service-info">
+                                <div class="service-icon">${appointment.icon}</div>
+                                <div class="service-details">
+                                    <div class="service-name">${appointment.service}</div>
+                                    <span class="service-category">${appointment.category}</span>
+                                </div>
+                                <div class="service-price">${appointment.price}</div>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-icon">👩</span>
+                                <span>${appointment.stylist}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-icon">📍</span>
+                                <span>${appointment.location}</span>
+                            </div>
+                        </div>
+
+                        <div class="appointment-actions">
+                            <button class="btn btn-outline" onclick="viewDetails(${index})">
+                                👁️ Ver
+                            </button>
+                            ${isUpcoming ? `
+                                <button class="btn btn-primary" onclick="reschedule(${index})">
+                                    📅 Reagendar
+                                </button>
+                                <button class="btn btn-danger" onclick="cancelAppointment(${index})">
+                                    ✕ Cancelar
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            appointmentsList.innerHTML = html;
+            updateStats();
+        }
+
+        // Función para actualizar estadísticas
+        function updateStats() {
+            const now = new Date();
+            
+            const upcomingCount = appointments.filter(appointment => {
+                const appointmentDate = new Date(appointment.date);
+                return appointmentDate > now && appointment.status !== 'cancelled';
+            }).length;
+            
+            const completedCount = appointments.filter(appointment => {
+                const appointmentDate = new Date(appointment.date);
+                return appointmentDate <= now && appointment.status !== 'cancelled';
+            }).length;
+            
+            const cancelledCount = appointments.filter(appointment => 
+                appointment.status === 'cancelled'
+            ).length;
+            
+            document.getElementById('upcomingCount').textContent = upcomingCount;
+            document.getElementById('completedCount').textContent = completedCount;
+            document.getElementById('cancelledCount').textContent = cancelledCount;
+        }
+
+        // Función para nueva cita
+        function newAppointment() {
+            // Guardar información de servicio seleccionado en localStorage
+            const serviceInfo = {
+                service: "Corte de Cabello Profesional",
+                category: "CORTE",
+                price: "$35.000",
+                duration: "30 minutos",
+                icon: "✂️"
+            };
+            localStorage.setItem('selectedService', JSON.stringify(serviceInfo));
+            
+            // Redirigir a selección de fecha y hora
+            window.location.href = 'Selección-Fecha-Hora.html';
+        }
+
+        // Función para reagendar cita
+        function reschedule(index) {
+            const appointment = appointments[index];
+            
+            // Guardar información para reagendar
+            localStorage.setItem('rescheduleIndex', index);
+            localStorage.setItem('selectedService', JSON.stringify({
+                service: appointment.service,
+                category: appointment.category,
+                price: appointment.price,
+                duration: appointment.duration,
+                icon: appointment.icon
+            }));
+            
+            // Redirigir a selección de fecha y hora
+            window.location.href = 'Selección-Fecha-Hora.html';
+        }
+
+        // Función para cancelar cita
+        function cancelAppointment(index) {
+            const appointment = appointments[index];
+            appointmentToCancel = index;
+            
+            document.getElementById('cancelService').textContent = appointment.service;
+            document.getElementById('cancelDate').textContent = new Date(appointment.date).toLocaleDateString('es-ES');
+            document.getElementById('cancelTime').textContent = new Date(appointment.date).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            
+            document.getElementById('cancelModal').classList.add('active');
+        }
+
+        // Función para confirmar cancelación
+        function confirmCancel() {
+            if (appointmentToCancel !== null) {
+                appointments[appointmentToCancel].status = 'cancelled';
+                localStorage.setItem('appointments', JSON.stringify(appointments));
+                loadAppointments();
+                
+                document.getElementById('successTitle').textContent = 'Cita Cancelada';
+                document.getElementById('successMessage').textContent = 'Tu cita ha sido cancelada exitosamente.';
+                document.getElementById('successModal').classList.add('active');
+                
+                closeModal();
+            }
+        }
+
+        // Función para ver detalles
+        function viewDetails(index) {
+            // Guardar índice de cita para mostrar detalles
+            localStorage.setItem('viewAppointmentIndex', index);
+            window.location.href = 'Detalle-de-Cita.html';
+        }
+
+        // Función para cerrar modal
+        function closeModal() {
+            document.getElementById('cancelModal').classList.remove('active');
+            document.getElementById('successModal').classList.remove('active');
+            appointmentToCancel = null;
+        }
+
+        // Función para ir a citas
+        function goToAppointments() {
+            // Ya estamos en citas, no hacer nada
+        }
+
+        // Cargar citas al iniciar
+        document.addEventListener('DOMContentLoaded', loadAppointments);
+    </script>
+</body>
+</html>
