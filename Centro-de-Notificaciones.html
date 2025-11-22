@@ -59,9 +59,7 @@
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             padding: var(--space-md);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+ 
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
 
@@ -402,24 +400,13 @@
             font-family: inherit;
         }
 
-        .btn-primary-small {
-            background: var(--primary);
+        .btn-delete {
+            background: var(--error);
             color: white;
         }
 
-        .btn-primary-small:hover {
-            background: #5a38a3;
-        }
-
-        .btn-outline-small {
-            background: white;
-            color: var(--text-secondary);
-            border: 2px solid var(--border);
-        }
-
-        .btn-outline-small:hover {
-            border-color: var(--text-secondary);
-            background: var(--bg-main);
+        .btn-delete:hover {
+            background: #e53e3e;
         }
 
         /* Category Badge */
@@ -657,53 +644,11 @@
                 <button class="back-btn" onclick="window.location.href='Dashboard-Cliente.html'">←</button>
                 <div class="header-title">Notificaciones</div>
                 <div class="header-actions">
-                    <button class="icon-btn" onclick="openSettings()">
-                        ⚙️
-                    </button>
+                  
                 </div>
             </div>
 
-            <!-- Filter Tabs -->
-            <div class="filter-tabs">
-                <button class="tab active" onclick="filterNotifications('all')">
-                    Todas <span class="tab-count">8</span>
-                </button>
-                <button class="tab" onclick="filterNotifications('reminder')">
-                    ⏰ Recordatorios <span class="tab-count">3</span>
-                </button>
-                <button class="tab" onclick="filterNotifications('promo')">
-                    🎁 Ofertas <span class="tab-count">2</span>
-                </button>
-                <button class="tab" onclick="filterNotifications('system')">
-                    ⚡ Sistema <span class="tab-count">2</span>
-                </button>
-                <button class="tab" onclick="filterNotifications('alert')">
-                    ⚠️ Alertas <span class="tab-count">1</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Content -->
-        <div class="content">
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <button class="quick-action-btn" onclick="markAllAsRead()">
-                    <div class="quick-action-icon">✓</div>
-                    <div class="quick-action-label">Marcar Leídas</div>
-                </button>
-                <button class="quick-action-btn" onclick="filterNotifications('unread')">
-                    <div class="quick-action-icon">📬</div>
-                    <div class="quick-action-label">No Leídas</div>
-                </button>
-                <button class="quick-action-btn" onclick="filterNotifications('important')">
-                    <div class="quick-action-icon">⭐</div>
-                    <div class="quick-action-label">Importantes</div>
-                </button>
-                <button class="quick-action-btn" onclick="openSettings()">
-                    <div class="quick-action-icon">🔔</div>
-                    <div class="quick-action-label">Ajustes</div>
-                </button>
-            </div>
+            
 
             <!-- Today Section -->
             <div class="notifications-section">
@@ -729,11 +674,8 @@
                     <div class="notification-footer">
                         <div class="notification-time">🕐 Hace 2 horas</div>
                         <div class="notification-actions">
-                            <button class="notification-btn btn-outline-small" onclick="event.stopPropagation(); reschedule(1)">
-                                Reprogramar
-                            </button>
-                            <button class="notification-btn btn-primary-small" onclick="event.stopPropagation(); viewDetails(1)">
-                                Ver Detalles
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(1)">
+                                Eliminar
                             </button>
                         </div>
                     </div>
@@ -754,8 +696,8 @@
                     <div class="notification-footer">
                         <div class="notification-time">🕐 Hace 3 horas</div>
                         <div class="notification-actions">
-                            <button class="notification-btn btn-primary-small" onclick="event.stopPropagation(); bookPromo(2)">
-                                Reservar Ahora
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(2)">
+                                Eliminar
                             </button>
                         </div>
                     </div>
@@ -776,8 +718,8 @@
                     <div class="notification-footer">
                         <div class="notification-time">🕐 Hace 5 horas</div>
                         <div class="notification-actions">
-                            <button class="notification-btn btn-primary-small" onclick="event.stopPropagation(); viewUpdate(3)">
-                                Ver Novedades
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(3)">
+                                Eliminar
                             </button>
                         </div>
                     </div>
@@ -808,8 +750,8 @@
                     <div class="notification-footer">
                         <div class="notification-time">🕐 Ayer a las 9:30 AM</div>
                         <div class="notification-actions">
-                            <button class="notification-btn btn-primary-small" onclick="event.stopPropagation(); bookAppointment()">
-                                Reservar
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(4)">
+                                Eliminar
                             </button>
                         </div>
                     </div>
@@ -830,11 +772,8 @@
                     <div class="notification-footer">
                         <div class="notification-time">🕐 Ayer a las 6:15 PM</div>
                         <div class="notification-actions">
-                            <button class="notification-btn btn-outline-small" onclick="event.stopPropagation(); skipRating()">
-                                Omitir
-                            </button>
-                            <button class="notification-btn btn-primary-small" onclick="event.stopPropagation(); rateService(5)">
-                                Calificar
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(5)">
+                                Eliminar
                             </button>
                         </div>
                     </div>
@@ -855,11 +794,8 @@
                     <div class="notification-footer">
                         <div class="notification-time">🕐 Ayer a las 2:45 PM</div>
                         <div class="notification-actions">
-                            <button class="notification-btn btn-outline-small" onclick="event.stopPropagation(); cancelAppointment()">
-                                Cancelar
-                            </button>
-                            <button class="notification-btn btn-primary-small" onclick="event.stopPropagation(); confirmChange()">
-                                Confirmar
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(6)">
+                                Eliminar
                             </button>
                         </div>
                     </div>
@@ -882,4 +818,161 @@
                         <div class="notification-content">
                             <div class="category-badge badge-promo">Oferta</div>
                             <div class="notification-title">¡Gana puntos dobles!</div>
-                            <div class
+                            <div class="notification-message">
+                                Reserva cualquier servicio esta semana y obtén el doble de puntos en tu programa de fidelidad.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-footer">
+                        <div class="notification-time">🕐 Lunes a las 10:15 AM</div>
+                        <div class="notification-actions">
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(7)">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Notification -->
+                <div class="notification-card system" onclick="openNotification(8)">
+                    <div class="notification-header">
+                        <div class="notification-icon system">⚡</div>
+                        <div class="notification-content">
+                            <div class="category-badge badge-system">Sistema</div>
+                            <div class="notification-title">Mantenimiento programado</div>
+                            <div class="notification-message">
+                                El sistema estará en mantenimiento el próximo domingo de 2:00 AM a 4:00 AM.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-footer">
+                        <div class="notification-time">🕐 Lunes a las 8:30 AM</div>
+                        <div class="notification-actions">
+                            <button class="notification-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(8)">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-items">
+                <div class="nav-item">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Inicio</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">📅</div>
+                    <div class="nav-label">Citas</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">🔔</div>
+                    <div class="nav-label">Notificaciones</div>
+                    <div class="nav-badge">3</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Perfil</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">Eliminar Notificación</div>
+            <div class="modal-text">
+                ¿Estás seguro de que quieres eliminar esta notificación? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="modal-btn btn-confirm" onclick="confirmDelete()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let notificationToDelete = null;
+
+        function filterNotifications(filter) {
+            // Cambiar pestaña activa
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Aquí iría la lógica para filtrar notificaciones
+            console.log(`Filtrando por: ${filter}`);
+        }
+
+        function openNotification(id) {
+            console.log(`Abriendo notificación ${id}`);
+            // Aquí iría la lógica para abrir la notificación
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-card.unread').forEach(card => {
+                card.classList.remove('unread');
+            });
+            console.log('Todas las notificaciones marcadas como leídas');
+        }
+
+        function markSectionAsRead(section) {
+            const sectionElement = event.target.closest('.notifications-section');
+            sectionElement.querySelectorAll('.notification-card.unread').forEach(card => {
+                card.classList.remove('unread');
+            });
+            console.log(`Sección ${section} marcada como leída`);
+        }
+
+        function openSettings() {
+            console.log('Abriendo configuración de notificaciones');
+            // Aquí iría la lógica para abrir la configuración
+        }
+
+        function deleteNotification(id) {
+            notificationToDelete = id;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            notificationToDelete = null;
+        }
+
+        function confirmDelete() {
+            if (notificationToDelete) {
+                const notification = document.querySelector(`.notification-card[onclick="openNotification(${notificationToDelete})"]`);
+                if (notification) {
+                    notification.style.opacity = '0';
+                    notification.style.height = '0';
+                    notification.style.margin = '0';
+                    notification.style.padding = '0';
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                        updateNotificationCounts();
+                    }, 300);
+                }
+            }
+            closeDeleteModal();
+        }
+
+        function updateNotificationCounts() {
+            // Aquí iría la lógica para actualizar los contadores de notificaciones
+            console.log('Actualizando contadores de notificaciones');
+        }
+
+        // Cerrar modal al hacer clic fuera del contenido
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>
